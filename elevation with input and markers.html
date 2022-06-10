@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elevation with Input and Marker</title>
+  </head>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/cc800be774.js" crossorigin="anonymous"></script>
+  <style>
+      *{
+          box-sizing: border-box;
+      }
+      body{
+        @media (min-width: 600px)
+        /* position: relative; */
+        background-color: white;
+        height: calc(100% - 52px);
+        margin-top: 52px;
+        color: #54585A;
+        font-size: 14px;
+        line-height: 1.42857143;
+        box-sizing: border-box;
+      }
+      div{
+          font-family: "Open Sans";
+      }
+      .overlay-extended{
+    /* position: absolute; */
+    /* width: 420px; */
+    height: 100%;
+    /* top: 0; */
+    /* left: 0; */
+    overflow: hidden;
+      }
+      .sidebar-section{
+          border-bottom: 1px solid #ddd;
+      }
+      .sidebar-body{
+    position:absolute;
+    left:0;
+    width:420px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: #f2f2f2;
+      }
+    .sidebar-section-body{
+        padding: 15px;
+    }
+    .input-grid{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: -3px;
+    }
+    .input-grid [class^=input-grid-col] {
+    padding: 3px;
+    }
+    .input-grid-col--9{
+        flex: 0 0 75%;
+    }
+    .label{
+    display: block;
+    margin-bottom: 6px;
+    line-height: 1;
+    font-size: 13px;
+    }
+    label{
+        max-width:100%;
+    }
+    .towersearch{
+        position:relative;
+    }
+    .towersearch img{
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        height: 25px;
+        width: auto;
+    }
+    img{
+        vertical-align: middle;
+    }
+    .input-grid-col--3{
+        flex: 0 0 25%;
+    }
+    .towerheight{
+        position:relative;
+    }
+    .input{
+        border-radius: 3px;
+        border: 1px solid #d6d6d6;
+        width: 100%;
+        padding: 4px;
+        font-size: 12px;
+        line-height: 1.5;
+        box-shadow: inset 0 1px 2px rgb(0 0 0 / 10%);
+        background: #fff;
+        display: inline-block;
+        height: 30px;
+        color: #54585A;
+        font-family: "Open Sans";
+    }
+    .towerheight span{
+        position: absolute;
+        top: 0;
+        right: 8px;
+        bottom: 4px;
+        line-height: 36px;
+        color: #888;
+    }
+    .select{
+        /* box-shadow: none; */
+        font-family: "Open Sans";
+        color: #54585A;
+        appearance: none;
+        background-image: url(image/arrowdown.png);
+        background-repeat: no-repeat;
+        background-position: calc(100% - 8px) 50%;
+        background-size: 20px 20px;
+        border-radius: 3px;
+        border: 1px solid #d6d6d6;
+        width: 100%;
+        padding: 4px;
+        font-size: 12px;
+        line-height: 1.5;
+        box-shadow: inset 0 1px 2px rgb(0 0 0 / 10%);
+        display: inline-block;
+        height: 30px;
+    }
+    optgroup{
+        font-weight: 700;
+    }
+    .align-center{
+        text-align:center;
+    }
+    .btn-group{
+        position:relative;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .btn{
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        /* -ms-touch-action: manipulation; */
+        touch-action: manipulation;
+        cursor: pointer;
+        /* -webkit-user-select: none; */
+        /* -moz-user-select: none; */
+        /* -ms-user-select: none; */
+        user-select: none;
+        background-image: none;
+        border: 1px solid #ccc;
+        color: #333;
+        font-family: "Open Sans";
+        border-radius: 4px;
+        background-color: white;
+    }
+    .sidebar-section-header{
+        position:relative;
+        height: 50px;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sidebar-section-title{
+        cursor: pointer;
+        position: relative;
+        padding-left: 15px;
+        margin-left: -3px;
+        flex: auto;
+        margin: 0;
+        line-height: 50px;
+        font-size: 13px;
+        font-family: 'Open Sans'!important;
+        font-weight: 600;
+        letter-spacing: .033em;
+        text-transform: uppercase;
+        user-select: none;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .refresh{
+        /* position: absolute; */
+        right:4px;
+        /* display: inline-block; */
+        /* font-family: 'Glyphicons Halflings'; */
+        /* font-style: normal; */
+        /* font-weight: 400; */
+        line-height: 1;
+      }
+      .link-summary{
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 4px;
+        background: #fff;
+      }
+      tbody{
+        display: table-row-group;
+        vertical-align: middle;
+      }
+      .link-summary tr{
+          border-bottom: 1px solid #eee;
+          line-height: 44px;
+          display: table-row;
+      }
+      .link-summary th{
+        padding-left: 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+      .link-summary td, .link-summary th{
+        width: 25%;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      .link-summary td{
+        padding-left: 8px;
+        font-size: 16px;
+      }
+
+    /* extra */
+    .linkSummary{
+        width: 100%;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 10%);
+    background: #fff;
+    display: inline-block;
+    height: 30px;width: 100%;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 10%);
+    background: #fff;
+    display: inline-block;
+    height: 30px;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 4px;
+    background: #fff;
+    }
+    table.linkSummary tr {
+      border-bottom: 1px solid #eee;
+      line-height: 44px;
+      display: table-row;
+    }
+    #map-container{
+        margin-top:10px;
+
+        /* transition: transform .33s cubic-bezier(.19,1,.22,1);
+    transform: translateX(100%); */
+    /* position: absolute; */
+    /* top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; */
+    /* display: flex; */
+   
+    background: #e5e3df;
+    }
+    #map3d{
+        position: absolute;
+    /* top: 0; */
+    left: 420px;
+    right: 0;
+    bottom: 0;
+    /* padding: 0; */
+    height: 100%;
+    width: 100%;
+    /* position: relative; */
+    /* overflow: hidden; */
+    /* z-index: 1; */
+    }
+  </style>
+  <body>
+      <div class="overlay-extended">
+        <div class="sidebar-body">
+            <form action="">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-body">
+                        <div class="input-grid">
+                            <div class="input-grid-col--9">
+                                <label for="searchA" class="label">Tower</label>
+                                <div class="towersearch">
+                                    <input type="text" id="searchtowerA" autocomplete="off" class="input" placeholder="Tower A">
+                                    <img src="image/starting.png" class="pinIcon" alt="">
+                                </div>
+                            </div>
+                            <div class="input-grid-col--3">
+                                <label for="aheight1" class="label">Height</label>
+                                <div class="towerheight">
+                                    <input type="text" class="input" id="aheight1">
+                                <span class="ng-binding">m</span></div>
+                            </div>
+                            <div class="input-grid-col--9">
+                                <div class="towersearch">
+                                    <input type="text" autocomplete="off" id="searchtowerB" class="input" placeholder="Tower B">
+                                    <img src="image/ending.png" alt="" class="pinIcon">
+                                </div>
+                            </div>
+                            <div class="input-grid-col--3">
+                                <div class="towerheight">
+                                    <input type="text" id="aheight2" class="input" placeholder="">
+                                    <span class="ng-bindind">m</span></div>
+                                </div>
+                            </div>
+                        <div style="margin-top:15px;">
+                            <label for="radio" class="label">Radio</label>
+                            <select name="" id="radio" class="select">
+                                <optgroup label="Dish Antenna">
+                                    <option value="23">ion4l2</option>
+                                    <option value="23">ion4l2 CPE</option>
+                                    <option value="25">ion4l3</option>
+                                    <option value="25">ion4l3 CPE</option>
+
+                                </optgroup>
+                                <optgroup label="External Antenna">
+                                    <option value="17" selected="selected">ion4l1 BTS</option>
+                                    <option value="25">ion4le</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        </div>
+                    </div> 
+                <div class="sidebar-section align-center">
+                        <div class="sidebar-section-body" style="padding:30px">
+                        <div class="btn-group">
+                            <button type="button" class="btn">Installation Report</button>
+                        </div></div>
+                    </div>
+                <!-- <div class="sidebar-section">
+                        <div class="sidebar-section-summarywrapper">
+                        <header class="sidebar-section-header">
+                            <label for="" class="sidebar-section-link-summary">Link Summary</label>
+                        </header>
+                        <div class="sidebar-section-body">
+                            <table class="linkSummary">
+                                <tr >
+                                  <th>Link Distance</th>
+                                  <td><span id="linkDistance" class="resultTable">Km</span></td>
+                                  <th>Fresnel Radius</th>
+                                  <td><span id="fresnelRadius">m</span></td>
+                                </tr>
+                                <tr>
+                                  <th>Azimuth Angle at <Area></Area></th>
+                                  <td class="">
+                                    <span id="azimuthAngleA" class="resultofTable">deg</span>
+                                  </td>
+                                  <th>Azimuth Angle at B</th>
+                                  <td class="">
+                                    <span id="azimuthAngleB" class="resultofTable">deg</span>
+                                  </td>
+                                </tr>
+                              </table>
+                        </div>
+                    </div>
+                    </div> -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-wrapper">
+                            <header class="sidebar-section-header">
+                                <label for="" class="sidebar-section-title">Link summary</label>
+                                <a href="">
+                                    <i class="fa-solid fa-arrows-rotate refresh" ></i>
+                                </a>
+                            </header>
+                            <div class="sidebar-section-body">
+                                <table class="link-summary">
+                                    <tbody>
+                                        <tr>
+                                            <th>line of sight</th>
+                                            <td><span class="ng-binding">Yes/No</span></td>
+                                            <th>fresnel radius</th>
+                                            <td><span class="ng-binding">m</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>link distance</th>
+                                            <td><span class="ng-binding">Km</span></td>
+                                            <th>azimuth angle</th>
+                                            <td><span class="ng-binding">deg</span></td>
+                                        </tr>
+                                        <tr> <th>rsl</th>
+                                            <td><span class="ng-binding">dBm</span></td>
+                                            <th>link reliability rate</th>
+                                            <td><span class="ng-binding">%</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </form> 
+        </div>
+       </div>
+            
+            
+       
+        
+      </div>
+      <div class="map-container"><div id="map3d" class="sidebar-section-body"></div></div></div>
+      
+   
+      
+    </form>
+    <!-- <script src="elevation.js"></script> -->
+    <script src="marker input.js"></script>
+    <script src="https://maps.google.com/maps/api/js?sensor=false&callback=initMap"></script>
+  </body>
+</html>
